@@ -5,7 +5,7 @@ type ChildrenProps = {
 }
 
 const Container: FC<ChildrenProps> = ({ children }) => (
-    <div className='w-11/12 max-w-md rounded-lg bg-white py-4'>
+    <div className='w-11/12 max-w-md rounded-lg bg-white pt-4 pb-6'>
         {children}
     </div>
 )
