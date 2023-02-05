@@ -5,8 +5,8 @@ import Signup from './pages/Signup'
 const App: FC = () => {
   return (
     <div className='flex justify-center items-center w-full min-h-screen bg-gradient-to-br from-gradient-primary to-gradient-secondary'>
-      {/* <Login /> */}
-      <Signup />
+      <Login />
+      {/* <Signup /> */}
     </div>
   )
 }
