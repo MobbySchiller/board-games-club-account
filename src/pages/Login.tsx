@@ -6,7 +6,7 @@ const Login: FC = () => {
     return (
         <Container>
             <Title />
-            <form className="flex flex-col rounded px-8 pt-6 pb-2">
+            <form className="flex flex-col px-8 pt-6 pb-2">
                 <div className="mb-4">
                     <label
                         className="block text-primary text-sm font-bold mb-2"
