@@ -2,7 +2,9 @@ import { FC } from 'react'
 
 const App: FC = () => {
   return (
-    <p>App</p>
+    <div className='w-full min-h-screen bg-gradient-to-br from-gradient-primary to-gradient-secondary'>
+
+    </div>
   )
 }
 
