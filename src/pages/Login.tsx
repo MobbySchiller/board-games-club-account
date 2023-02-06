@@ -1,46 +1,45 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import Container from '../components/Container'
 import Title from '../components/Title'
 import Error from '../components/Error'
-import { DataValidate } from '../App'
-
-const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
-const MIN_PASSWORD_LENGTH = 6
+import { IsDataCorrect } from '../types/Login'
+import { DataToLogIn } from '../types/App'
+import APP_CONFIG from '../config/config'
 
 type LoginProps = {
-    validation: {
-        isDataValidate: DataValidate,
-        setIsDataValidate: React.Dispatch<React.SetStateAction<DataValidate>>
-    }
+    setDataToLogIn: React.Dispatch<React.SetStateAction<DataToLogIn>>
 }
 
-type LoginData = {
-    email: string,
-    password: string
-}
+const Login: FC<LoginProps> = ({ setDataToLogIn }) => {
+    const emailRef = useRef<HTMLInputElement>(null)
+    const passwordRef = useRef<HTMLInputElement>(null)
 
-const Login: FC<LoginProps> = ({ validation }) => {
-    const [loginData, setLoginData] = useState<LoginData>({
-        email: '',
-        password: ''
+    const [isDataCorrect, setIsDataCorrect] = useState<IsDataCorrect>({
+        email: true,
+        password: true
     })
-
-    const { isDataValidate, setIsDataValidate } = validation
 
     const handleSubmit = (event: React.SyntheticEvent) => {
         event.preventDefault()
-        checkData()
+        const emailInputValue = String(emailRef.current?.value)
+        const passwordInputValue = String(passwordRef.current?.value)
+        if (!checkData(emailInputValue, passwordInputValue)) return
+        setDataToLogIn({
+            email: emailInputValue,
+            password: passwordInputValue
+        })
     }
 
-    const checkData = () => {
-        const { email, password } = loginData
-        const isEmailCorrect = Boolean(email.match(EMAIL_REGEX))
-        const isPasswordCorrect = Boolean(password.length >= MIN_PASSWORD_LENGTH)
-        setIsDataValidate({
+    const checkData = (email: string, password: string): boolean => {
+        const isEmailCorrect = Boolean(email.match(APP_CONFIG.EMAIL_REGEX))
+        const isPasswordCorrect = Boolean(password.length >= APP_CONFIG.MIN_PASSWORD_LENGTH)
+        setIsDataCorrect({
             email: isEmailCorrect,
             password: isPasswordCorrect
         })
+        return isEmailCorrect && isPasswordCorrect
     }
+
 
     return (
         <Container>
@@ -61,9 +60,9 @@ const Login: FC<LoginProps> = ({ validation }) => {
                         id="email"
                         type="text"
                         placeholder="Enter email"
-                        value={loginData.email}
-                        onChange={(event) => setLoginData({ ...loginData, email: event.target.value })} />
-                    {!isDataValidate.email &&
+                        ref={emailRef}
+                    />
+                    {!isDataCorrect.email &&
                         <p className="text-error text-xs italic">
                             Invalid email.
                         </p>
@@ -80,10 +79,9 @@ const Login: FC<LoginProps> = ({ validation }) => {
                         id="password"
                         type="password"
                         placeholder="Enter password"
-                        value={loginData.password}
-                        onChange={(event) => setLoginData({ ...loginData, password: event.target.value })}
+                        ref={passwordRef}
                     />
-                    {!isDataValidate.password &&
+                    {!isDataCorrect.password &&
                         <p className="text-error text-xs italic">
                             Invalid password.
                         </p>
