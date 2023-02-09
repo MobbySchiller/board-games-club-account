@@ -1,8 +1,9 @@
 import { FC, useState, useEffect } from 'react'
 import Home from './pages/Home'
 import Login from './pages/Login'
-import Signup from './pages/Signup'
 import { DataToLogIn } from './types/App'
+import APP_CONFIG from './config/config'
+
 
 const initialDataToLogIn = {
   email: '',
@@ -19,6 +20,8 @@ const App: FC = () => {
       console.log(dataToLogIn)
     }
   }, [dataToLogIn])
+
+
 
   return (
     <div className='flex justify-center items-center w-full min-h-screen bg-gradient-to-br from-gradient-primary to-gradient-secondary'>
