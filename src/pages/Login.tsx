@@ -91,7 +91,7 @@ const Login: FC<LoginProps> = ({ setDataToLogIn }) => {
                     className="bg-important text-white font-bold py-2 px-4 rounded"
                     type="submit"
                 >
-                    Sign up
+                    Sign in
                 </button>
             </form>
             <p className='text-center text-sm'>Not a member? <a className='text-important font-bold'>Sign up</a></p>
