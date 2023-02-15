@@ -1,30 +1,52 @@
-import React, { FC, useRef, useState } from 'react'
+import React, { FC, useRef, useState, useEffect } from 'react'
 import Container from '../components/Container'
 import Title from '../components/Title'
 import Error from '../components/Error'
-import { IsDataCorrect } from '../types/Login'
-import { DataToLogIn } from '../types/App'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../api/firebase'
+import { useNavigate } from 'react-router-dom'
+import { IsLoginDataCorrect, DataToLogin } from '../types/Login'
 import APP_CONFIG from '../config/config'
 
-type LoginProps = {
-    setDataToLogIn: React.Dispatch<React.SetStateAction<DataToLogIn>>
+const initialDataToLogIn = {
+    email: '',
+    password: ''
 }
 
-const Login: FC<LoginProps> = ({ setDataToLogIn }) => {
-    const emailRef = useRef<HTMLInputElement>(null)
-    const passwordRef = useRef<HTMLInputElement>(null)
-
-    const [isDataCorrect, setIsDataCorrect] = useState<IsDataCorrect>({
+const Login: FC = () => {
+    const [dataToLogin, setDataToLogin] = useState<DataToLogin>(initialDataToLogIn)
+    const [isLoginDataCorrect, setIsLoginDataCorrect] = useState<IsLoginDataCorrect>({
         email: true,
         password: true
     })
+    const emailRef = useRef<HTMLInputElement>(null)
+    const passwordRef = useRef<HTMLInputElement>(null)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const { email, password } = dataToLogin
+        if (email && password) {
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in
+                    const user = userCredential.user;
+                    console.log(user);
+                    navigate('/')
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorCode, errorMessage)
+                });
+        }
+    }, [dataToLogin])
 
     const handleSubmit = (event: React.SyntheticEvent) => {
         event.preventDefault()
         const emailInputValue = String(emailRef.current?.value)
         const passwordInputValue = String(passwordRef.current?.value)
         if (!checkData(emailInputValue, passwordInputValue)) return
-        setDataToLogIn({
+        setDataToLogin({
             email: emailInputValue,
             password: passwordInputValue
         })
@@ -33,7 +55,7 @@ const Login: FC<LoginProps> = ({ setDataToLogIn }) => {
     const checkData = (email: string, password: string): boolean => {
         const isEmailCorrect = Boolean(email.match(APP_CONFIG.EMAIL_REGEX))
         const isPasswordCorrect = Boolean(password.length >= APP_CONFIG.MIN_PASSWORD_LENGTH)
-        setIsDataCorrect({
+        setIsLoginDataCorrect({
             email: isEmailCorrect,
             password: isPasswordCorrect
         })
@@ -62,7 +84,7 @@ const Login: FC<LoginProps> = ({ setDataToLogIn }) => {
                         placeholder="Enter email"
                         ref={emailRef}
                     />
-                    {!isDataCorrect.email &&
+                    {!isLoginDataCorrect.email &&
                         <p className="text-error text-xs italic">
                             Invalid email.
                         </p>
@@ -81,7 +103,7 @@ const Login: FC<LoginProps> = ({ setDataToLogIn }) => {
                         placeholder="Enter password"
                         ref={passwordRef}
                     />
-                    {!isDataCorrect.password &&
+                    {!isLoginDataCorrect.password &&
                         <p className="text-error text-xs italic">
                             Invalid password.
                         </p>

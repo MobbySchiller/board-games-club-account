@@ -1,9 +1,9 @@
-export type LoginData = {
-    email: string,
-    password: string
-}
-
-export type IsDataCorrect = {
+export type IsLoginDataCorrect = {
     email: boolean,
     password: boolean
 }
+
+export type DataToLogin = {
+    email: string,
+    password: string
+} 
