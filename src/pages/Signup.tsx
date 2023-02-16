@@ -1,6 +1,7 @@
 import { FC, useState, useRef, useEffect } from 'react'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../api/firebase'
+import { collection, addDoc } from 'firebase/firestore'
+import { auth, database } from '../api/firebase'
 import { useNavigate } from 'react-router-dom'
 import APP_CONFIG from '../config/config'
 import { IsSignupDataCorrect, DataToSignup } from '../types/Signup'
@@ -26,6 +27,7 @@ const Signup: FC = () => {
     const lastNameRef = useRef<HTMLInputElement>(null)
     const emailRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
+    const collectionRef = collection(database, 'users')
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -35,14 +37,20 @@ const Signup: FC = () => {
                 .then((userCredential) => {
                     // Signed in
                     const user = userCredential.user;
-                    console.log(user);
                     navigate('/login')
                 })
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
                     console.log(errorCode, errorMessage)
-                });
+                })
+            addDoc(collectionRef, {
+                firstName,
+                lastName,
+                email
+            })
+                .then(() => console.log('done'))
+                .catch((err) => console.log(err))
         }
     }, [dataToSignup])
 
