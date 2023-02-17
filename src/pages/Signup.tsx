@@ -1,6 +1,6 @@
 import { FC, useState, useRef, useEffect } from 'react'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { collection, addDoc } from 'firebase/firestore'
+import { collection, setDoc, doc } from 'firebase/firestore'
 import { auth, database } from '../api/firebase'
 import { useNavigate } from 'react-router-dom'
 import APP_CONFIG from '../config/config'
@@ -44,7 +44,7 @@ const Signup: FC = () => {
                     const errorMessage = error.message;
                     console.log(errorCode, errorMessage)
                 })
-            addDoc(collectionRef, {
+            setDoc(doc(collectionRef, email), {
                 firstName,
                 lastName,
                 email

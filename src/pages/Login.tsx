@@ -5,16 +5,19 @@ import Error from '../components/Error'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../api/firebase'
 import { useNavigate } from 'react-router-dom'
-import { IsLoginDataCorrect, DataToLogin } from '../types/Login'
+import { DataToLogin } from '../types/App'
+import { IsLoginDataCorrect } from '../types/Login'
 import APP_CONFIG from '../config/config'
 
-const initialDataToLogIn = {
-    email: '',
-    password: ''
+type LoginProps = {
+    dataToLogin: {
+        email: string,
+        password: string
+    },
+    setDataToLogin: React.Dispatch<React.SetStateAction<DataToLogin>>
 }
 
-const Login: FC = () => {
-    const [dataToLogin, setDataToLogin] = useState<DataToLogin>(initialDataToLogIn)
+const Login: FC<LoginProps> = ({ dataToLogin, setDataToLogin }) => {
     const [isLoginDataCorrect, setIsLoginDataCorrect] = useState<IsLoginDataCorrect>({
         email: true,
         password: true
