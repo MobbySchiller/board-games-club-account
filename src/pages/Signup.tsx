@@ -47,7 +47,7 @@ const Signup: FC = () => {
             setDoc(doc(collectionRef, email), {
                 firstName,
                 lastName,
-                email
+                email,
             })
                 .then(() => console.log('done'))
                 .catch((err) => console.log(err))
