@@ -4,7 +4,7 @@ import Title from '../components/Title'
 import Error from '../components/Error'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../api/firebase'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, NavLink } from 'react-router-dom'
 import { DataToLogin } from '../types/App'
 import { IsLoginDataCorrect } from '../types/Login'
 import APP_CONFIG from '../config/config'
@@ -115,10 +115,10 @@ const Login: FC<LoginProps> = ({ dataToLogin, setDataToLogin }) => {
                     className="bg-important text-white font-bold py-2 px-4 rounded"
                     type="submit"
                 >
-                    Sign in
+                    Log in
                 </button>
             </form>
-            <p className='text-center text-sm'>Not a member? <a className='text-important font-bold'>Sign up</a></p>
+            <p className='text-center text-sm'>Not a member? <NavLink to={'/signup'} className='text-important font-bold'>Sign up</NavLink></p>
         </Container>
     )
 }
