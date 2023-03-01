@@ -35,7 +35,7 @@ const Home: FC<HomeProps> = ({ emailToLogin }) => {
                         <span className='ml-1 font-normal'>{userData?.lastName}</span>
                     </p>
                     <p className='mb-4'>ID:
-                        <span className='ml-1 font-normal'>ID</span>
+                        <span className='ml-1 font-normal'>{userData?.id}</span>
                     </p>
                     <img
                         src={qr}

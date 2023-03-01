@@ -33,8 +33,7 @@ const Login: FC<LoginProps> = ({ dataToLogin, setDataToLogin }) => {
                 .then((userCredential) => {
                     // Signed in
                     const user = userCredential.user;
-                    console.log(user);
-                    navigate('/')
+                    navigate('/home')
                 })
                 .catch((error) => {
                     const errorCode = error.code;

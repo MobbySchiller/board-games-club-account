@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { collection, setDoc, doc } from 'firebase/firestore'
 import { auth, database } from '../api/firebase'
 import { useNavigate } from 'react-router-dom'
+import { v4 as uuidv4 } from 'uuid'
 import APP_CONFIG from '../config/config'
 import { IsSignupDataCorrect, DataToSignup } from '../types/Signup'
 import Container from '../components/Container'
@@ -12,7 +13,8 @@ const initialDataToSignUp = {
     firstName: '',
     lastName: '',
     email: '',
-    password: ''
+    password: '',
+    id: ''
 }
 
 const Signup: FC = () => {
@@ -31,7 +33,7 @@ const Signup: FC = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const { firstName, lastName, email, password } = dataToSignup
+        const { firstName, lastName, email, password, id } = dataToSignup
         if (email && password) {
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
@@ -48,8 +50,8 @@ const Signup: FC = () => {
                 firstName,
                 lastName,
                 email,
+                id
             })
-                .then(() => console.log('done'))
                 .catch((err) => console.log(err))
         }
     }, [dataToSignup])
@@ -65,9 +67,9 @@ const Signup: FC = () => {
             firstName: firstNameInputValue,
             lastName: lastNameInputValue,
             email: emailInputValue,
-            password: passwordInputValue
+            password: passwordInputValue,
+            id: uuidv4()
         })
-        console.log('działa')
     }
 
     const checkData = (firstName: string, lastName: string, email: string, password: string): boolean => {
