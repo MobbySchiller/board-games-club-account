@@ -9,6 +9,7 @@ module.exports = {
       'primary': '#000000',
       'secondary': '#A0AEC0',
       'important': '#2691D9',
+      'success': '#7DC67D',
       'error': '#F56565',
       'lines': '#E2E8F0',
       'input': '#EDF2F7',

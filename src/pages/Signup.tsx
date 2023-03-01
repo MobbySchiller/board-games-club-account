@@ -25,6 +25,8 @@ const Signup: FC = () => {
         email: true,
         password: true
     })
+    const [errorMessage, setErrorMessage] = useState('')
+    const [successMessage, setSuccessMessage] = useState('')
     const firstNameRef = useRef<HTMLInputElement>(null)
     const lastNameRef = useRef<HTMLInputElement>(null)
     const emailRef = useRef<HTMLInputElement>(null)
@@ -33,28 +35,31 @@ const Signup: FC = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const { firstName, lastName, email, password, id } = dataToSignup
+        const { email, password } = dataToSignup
         if (email && password) {
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // Signed in
-                    const user = userCredential.user;
-                    navigate('/login')
+                    const user = userCredential.user
+                    saveDataInDB()
+                    setSuccessMessage('You have successfully registered')
+                    setTimeout(() => navigate('/login'), 2000)
                 })
                 .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(errorCode, errorMessage)
+                    const errorCode = error.code
+                    setErrorMessage(errorCode)
                 })
-            setDoc(doc(collectionRef, email), {
-                firstName,
-                lastName,
-                email,
-                id
-            })
-                .catch((err) => console.log(err))
         }
     }, [dataToSignup])
+
+    const saveDataInDB = () => {
+        const { firstName, lastName, email, id } = dataToSignup
+        setDoc(doc(collectionRef, email), {
+            firstName,
+            lastName,
+            email,
+            id
+        })
+    }
 
     const handleSubmit = (event: React.SyntheticEvent) => {
         event.preventDefault()
@@ -62,6 +67,8 @@ const Signup: FC = () => {
         const lastNameInputValue = String(lastNameRef.current?.value)
         const emailInputValue = String(emailRef.current?.value)
         const passwordInputValue = String(passwordRef.current?.value)
+        setSuccessMessage('')
+        setErrorMessage('')
         if (!checkData(firstNameInputValue, lastNameInputValue, emailInputValue, passwordInputValue)) return
         setDataToSignup({
             firstName: firstNameInputValue,
@@ -90,6 +97,12 @@ const Signup: FC = () => {
     return (
         <Container>
             <Title />
+            {errorMessage &&
+                <p className='bg-error text-center text-white font-bold py-1'>{errorMessage}</p>
+            }
+            {successMessage &&
+                <p className='bg-success text-center text-white font-bold py-1'>{successMessage}</p>
+            }
             <form
                 className="flex flex-col rounded px-8 pt-6 pb-2"
                 onSubmit={handleSubmit}
@@ -162,7 +175,7 @@ const Signup: FC = () => {
                         ref={passwordRef} />
                     {!isSignupDataCorrect.password &&
                         <p className="text-error text-xs italic">
-                            The e-mail address provided is invalid.
+                            The password should contain a capital letter and a number.
                         </p>
                     }
                 </div>
